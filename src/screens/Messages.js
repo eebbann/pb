@@ -1,14 +1,13 @@
 import { StyleSheet, Text, View } from 'react-native';
-import React,{useState} from 'react';
-import Message from '../components/Message'; 
+import React,{useState} from 'react'; 
 import Home from './Home';
 
-const Messages = ( ) => {
-const [feed, setFeed] = useState([]);
+const Messages = ( ) => { 
 	return (
 		<View>
-			<Message feed={feed} name="jj"/>
-			<Home feed={feed}/>
+				{/* need to add the props data here Home */}
+				
+			<Text>Messages</Text>
 		</View>
 	);
 };

@@ -14,7 +14,7 @@ function BottomNav() {
 	return (
 		<Tab.Navigator
 			screenOptions={{
-				tabBarStyle: { backgroundColor: "#2c041c" },
+				tabBarStyle: { backgroundColor: "#061853" },
 				tabBarInactiveTintColor: "#c2cbf0",
 				tabBarActiveTintColor: "white",
 			}}
@@ -25,7 +25,7 @@ function BottomNav() {
 				component={SplashScreen}
 				options={{
 					headerStyle: {
-						backgroundColor: "#311432",
+						backgroundColor: "yellow",
 						shadowColor: "transparent",
 					},
 					tabBarIconStyle: { display: "none" },
@@ -42,7 +42,7 @@ function BottomNav() {
 				options={{
 					headerStyle: {
 						backgroundColor: "#311432",
-						shadowColor: "transparent",
+				 		shadowColor: "transparent",
 					},
 					headerShown: false,
 					headerTintColor: "#fff",

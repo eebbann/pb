@@ -1,65 +1,103 @@
-import { StyleSheet, Dimensions, Text, View, TextInput, ActivityIndicator, FlatList, Button, StatusBar, TouchableOpacity } from 'react-native';
-import React, {useEffect, useState} from 'react';
-import { Video, AVPlaybackStatus } from 'expo-av';
+import {
+	StyleSheet,
+	Dimensions,
+	Text,
+	View,
+	TextInput,
+	ActivityIndicator,
+	FlatList,
+	Button,
+	StatusBar,
+	TouchableOpacity,
+} from "react-native";
+import React, { useEffect, useState } from "react";
+import { Video, AVPlaybackStatus } from "expo-av";
 //play button icon
-import {Ionicons } from '@expo/vector-icons';
+import { Ionicons } from "@expo/vector-icons";
 
-const Home = ({person}) => {
-	const [searchInput, setSearchInput] = useState('');
-	const [feed, setFeed] = useState([]);
-	const video = React.useRef(null); 
-  const [status, setStatus] = React.useState({}); 
+const Home = () => {
+	const [searchInput, setSearchInput] = useState("");
+	const [feed, setFeed] = useState({});
 	useEffect(() => {
-		fetch("http://157.230.11.142:5000/presentbox/00000000?text=Something%20Something%20Something&is_closed=true")
-		.then(response => response.json())
-    .then(data => setFeed(data));
-		async function fetchStatus() {
-			const status = await video.current.getStatusAsync();
-			setStatus(status);
-		}
-		fetchStatus();
+		fetch(
+			"http://157.230.11.142:5000/presentbox/00000000?text=Something%20Something%20Something&is_closed=true"
+		)
+			.then((response) => response.json())
+			.then((data) => setFeed(data))
+			.catch(function(error) {
+				console.log(
+					"There has been a problem with your fetch operation: " + error.message
+				);
+				// ADD THIS THROW error
+				throw error;
+			});
 	}, []);
- const {width, height} = Dimensions.get('screen');
-	return ( 
- 
-	<View style={styles.main}>
-	  <View style={[styles.section, {height:height/1.7 }]}>
-			<Text style={styles.heading}>
-		   View Expression
-			</Text>
-			<View style={styles.search}>
-				<TextInput value={searchInput} onChangeText={(val)=>setSearchInput=(val)} style={styles.input} placeholder="Search" placeholderTextColor="#000"/>
-	     </View>
-			 { fetch.length >  2 ? <ActivityIndicator size="large"  color="#0000ff" /> :
-			   <Video
-        ref={video}
-        style={styles.video} 
-				posterSource={{ uri: 'https://i.imgur.com/7lkRQTl.png' }}
-        source={{
-          uri: 'http://157.230.11.142:5000/presentbox/download/00000000',
-        }}
-        useNativeControls
-				resizeMode="cover" 
-        isLooping
-        onPlaybackStatusUpdate={status => setStatus(() => status)}
-				onError={error => setStatus(() => ({ status, error }))} 
-				
-      />}
-		</View>
-      <View style={styles.buttons}>
-        <TouchableOpacity 
-            onPress={() =>
-            status.isPlaying ? video.current.pauseAsync() : video.current.playAsync()
-          }>
-					
-						{/* play button */}
-				<View  style={styles.button} >{status.isPlaying ? <Ionicons name= "play-circle" size={52} color="#2c041c" /> :   <Ionicons name="pause-circle" size={52} />}</View>
+	const video = React.useRef(null);
+	const [status, setStatus] = React.useState({});
+
+	const { width, height } = Dimensions.get("screen");
+	return (
+		<View style={styles.main}>
+			<View style={[styles.section, { height: height / 1.7 }]}>
+				<Text style={styles.heading}>View Expression</Text>
+				<View style={styles.search}>
+					<TextInput
+						value={searchInput}
+						onChangeText={(val) => (setSearchInput = val)}
+						style={styles.input}
+						placeholder="Search"
+						placeholderTextColor="#000"
+					/>
+				</View>
+				{fetch.length < 1 ? (
+					<ActivityIndicator size="large" color="white" />
+				) : (
+					<Video
+						ref={video}
+						style={styles.video}
+						source={{
+							uri: "http://157.230.11.142:5000/presentbox/download/00000000",
+						}}
+						useNativeControls
+						resizeMode="cover"
+						isLooping
+						onPlaybackStatusUpdate={(status) => setStatus(() => status)}
+						onError={(error) => setStatus(() => ({ status, error }))}
+					/>
+				)}
+			</View>
+			<View style={styles.curve}>
+			<View style={styles.buttons}>
+				<TouchableOpacity
+					onPress={() =>
+						status.isPlaying
+							? video.current.pauseAsync()
+							: video.current.playAsync()
+					}
+				>
+					{/* play button */}
+					<View style={styles.button}>
+						{status.isPlaying ? (
+							<Ionicons name="pause-circle" size={52} color="#ffff" />
+						) : (
+							<Ionicons name="play-circle" size={52} color="#ffff" />
+						)}
+					</View>
 				</TouchableOpacity>
-      </View>
-			 {/* display error when video is not playing */}
-			 {status.error && <Text>{status.error ? 'not working' : 'works'}</Text>}
-					{/*WILL MAP THIS*/}
-			<Text style={{fontSize:29}}>{feed.id}</Text>
+			</View>
+			{/* display error when video is not playing */}
+			{status.error && <Text>{status.error ? feed.text : null}</Text>}
+			{/* display list of feed state using flatlist */}
+
+			<FlatList
+				data={feed}
+				keyExtractor={(item, index) => index.toString()}
+				renderItem={({ item }) => <Text style={styles.item}>{item.text}</Text>}
+			/>
+			<View style={styles.feedText}>
+				<Text style={styles.heading}>{feed.id}</Text>
+			</View>
+			</View>
 		</View>
 	);
 };
@@ -69,27 +107,34 @@ export default Home;
 const styles = StyleSheet.create({
 	main: {
 		flex: 1,
+		backgroundColor: "#8da9f3",
+		 
+
+	},
+	curve: {
+		flex: 1,
+		backgroundColor: "#8da9f3",
+		borderTopLeftRadius: 50,
+		borderTopRightRadius: 50,
+		marginTop: -10,  
+
 	},
 	section: {
-		backgroundColor: "#2c041c",
+		backgroundColor: "#061853",
 		width: "100%",
 	},
 	feedText: {
 		fontSize: 20,
 		color: "#ffff",
-		padding: 10,
-		bottom: 0,
-		left: 0,
-		right: 0,
-
-		position: "absolute",
-		backgroundColor: "white",
 	},
 	video: {
 		flex: 1,
 		alignSelf: "stretch",
 		height: "100%",
 		width: "100%",
+		borderBottomWidth: 0,
+		borderBottomColor: "#061853",
+		paddingBottom: 10,
 	},
 
 	buttons: {
@@ -117,14 +162,14 @@ const styles = StyleSheet.create({
 		marginTop: 64,
 	},
 	input: {
-		width: "90%",
+		width: "95%",
 		height: 40,
 		borderRadius: 8,
 		borderWidth: 1,
 		backgroundColor: "#ebebeb",
 		paddingLeft: 10,
-		marginTop: 10,
-		marginBottom: 10,
+		marginTop: 0,
+		marginBottom: 20,
 		fontSize: 16,
 		fontFamily: "Montserrat_400Regular",
 		letterSpacing: 1,

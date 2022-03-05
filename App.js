@@ -37,11 +37,14 @@ Montserrat_800ExtraBold_Italic,
 Montserrat_900Black_Italic,
 } from '@expo-google-fonts/montserrat'
 import BottomNav from './src/components/BottomNav/BottomNav';
-import SplashScreen from './src/components/SplashScreen/SplashScreen';
+import Context from './Context';
+ 
 
 const Stack = createNativeStackNavigator();
 
 function MyStack() {
+
+
   return (
 		 
 		<Stack.Navigator screenOptions={{headerShown:false}} >
@@ -52,6 +55,7 @@ function MyStack() {
 }
 
 export default function App() {
+	
   let [fontsLoaded] = useFonts({
     Lato_100Thin,
     Lato_100Thin_Italic,
@@ -88,8 +92,10 @@ export default function App() {
   }
 	else {
    return (
+		 <Context>
  	    <NavigationContainer>
 			<MyStack/>
 			</NavigationContainer>
+		</Context>
 		)}
 }
